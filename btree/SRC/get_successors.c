@@ -49,3 +49,10 @@ int get_successors(char *key, int k, char *result[]) {
 
     return found;
 }
+
+void printSuccessors(char **result, int size) {
+	printf("found %d predecessors:\n", size);
+	for (int i = 0; i < size; i++) {
+		printf("%s\n", result[i]);
+	}
+}
