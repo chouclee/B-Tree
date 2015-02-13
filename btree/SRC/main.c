@@ -39,7 +39,7 @@ extern char **create_string_array(size_t n);
 extern void sort_string_array(char **arr, size_t n);
 extern void free_string_array(char **arr, size_t n);
 extern void printFetchPageCalls();
-extern void printSuccessors(char **result, int size);
+//extern void printSuccessors(char *result[], int size);
 
 int main(int argc, char **argv) {
     char word[MAXWORDSIZE];
@@ -107,9 +107,9 @@ int main(int argc, char **argv) {
             scanf("%s", word);
             printf("k=?\n");
             scanf("%d", &k);
-            result = malloc(sizeof(char*)*k);
-            int found = get_successors(word, k, result);
-            printSuccessors(result, found);
+            result = (char**)malloc(sizeof(char*)*k);
+            get_successors(word, k, result);
+            //printSuccessors(result, found);
             free(result);
             break;
         case '<':
