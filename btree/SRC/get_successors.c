@@ -21,10 +21,10 @@ int get_successors(char *key, int k, char *result[]) {
 
     /* if strlen(key) > MAXWORDSIZE or it is a stop word or contains
      * non-alphanumeric character*/
-    if (strlen(key) > MAXWORDSIZE || iscommon(key) ||
-    		check_word(key) == FALSE) {
-    	return -1;
-    }
+    //if (strlen(key) > MAXWORDSIZE || iscommon(key) ||
+    //		check_word(key) == FALSE) {
+    //	return -1;
+    //}
 
     /* turn to lower case, for uniformity */
     strtolow(key);
@@ -38,7 +38,7 @@ int get_successors(char *key, int k, char *result[]) {
 	findInsertionP(KeyListTraverser, key, &hasFound,
 											  PagePtr->NumKeys);
 	/* key is in the B-Tree */
-	if (hasFound == TRUE) {
+	//if (hasFound == TRUE) {
 		*KeyListTraverser = (*KeyListTraverser)->Next;
 		while ((*KeyListTraverser) && k > 0) {
 			//printf("%s\n", KeyListTraverser->StoredKey);
@@ -57,6 +57,7 @@ int get_successors(char *key, int k, char *result[]) {
 			if ((nextPage < 1) || (nextPage > totalPage)) {
 				break;
 			}
+			FreePage(PagePtr);
 			PagePtr = FetchPage(nextPage);
 			if (PagePtr) {
 				KeyListTraverser = &(PagePtr->KeyListPtr);
@@ -68,7 +69,7 @@ int get_successors(char *key, int k, char *result[]) {
 				}
 			}
 		}
-	}
+	//}
 	printSuccessors(result, found);
 
 	FreePage(PagePtr);

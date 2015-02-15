@@ -12,6 +12,10 @@
 *********************************************************************/
 
 #include "def.h"
+#include "stack.h"
+
+extern int toGetPredecessors;
+extern stack s;
 
 PAGENO FindPageNumOfChild(struct PageHdr *PagePtr,
                           struct KeyRecord *KeyListTraverser, char *Key,
@@ -32,9 +36,12 @@ PAGENO FindPageNumOfChild(struct PageHdr *PagePtr,
     Result = CompareKeys(Key, Word);
 
     NumKeys = NumKeys - 1;
-
+    //printf("%ld\n", KeyListTraverser->PgNum);
     if (NumKeys > 0) {
         if (Result == 2) { /* New key > stored key:  keep searching */
+        	if (toGetPredecessors == TRUE) {
+        		stack_push(&s, &(KeyListTraverser->PgNum));
+        	}
             KeyListTraverser = KeyListTraverser->Next;
             return (
                 FindPageNumOfChild(PagePtr, KeyListTraverser, Key, NumKeys));
@@ -44,7 +51,11 @@ PAGENO FindPageNumOfChild(struct PageHdr *PagePtr,
     {
         if ((Result == 1) || (Result == 0))    /* New key <= stored key */
             return (KeyListTraverser->PgNum);  /* return left child */
-        else                                   /* New key > stored key */
+        else {                                 /* New key > stored key */
+        	if (toGetPredecessors == TRUE) {
+        		stack_push(&s, &(KeyListTraverser->PgNum));
+        	}
             return (PagePtr->PtrToFinalRtgPg); /* return rightmost child */
+        }
     }
 }

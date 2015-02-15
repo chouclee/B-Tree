@@ -117,7 +117,9 @@ int main(int argc, char **argv) {
             scanf("%s", word);
             printf("k=?\n");
             scanf("%d", &k);
+            result = (char**)malloc(sizeof(char*)*k);
             get_predecessors(word, k, result);
+            free(result);
             break;
         case 'T':
             printf("\n*** Printing tree in order .........\n");
