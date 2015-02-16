@@ -15,7 +15,7 @@ PAGENO FindNumPagesInTree(void);
 int get_successors(char *key, int k, char *result[]) {
 	int found = 0;
 	if (k <= 0) {
-		printf("k should be positive not %d\n", k);
+		printf("k should be positive not %d", k);
 		return -1;
 	}
 
@@ -37,38 +37,37 @@ int get_successors(char *key, int k, char *result[]) {
 	KeyListTraverser = &(PagePtr->KeyListPtr);
 	findInsertionP(KeyListTraverser, key, &hasFound,
 											  PagePtr->NumKeys);
-	/* key is in the B-Tree */
-	//if (hasFound == TRUE) {
+	if (hasFound)
 		*KeyListTraverser = (*KeyListTraverser)->Next;
-		while ((*KeyListTraverser) && k > 0) {
-			//printf("%s\n", KeyListTraverser->StoredKey);
-			result[found] = (*KeyListTraverser)->StoredKey;
-			//char *c = result[found];
-			//printf("%s\n", c);
-			found++;
-			k--;
-			*KeyListTraverser = (*KeyListTraverser)->Next;
+	while ((*KeyListTraverser) && k > 0) {
+		//printf("%s\n", KeyListTraverser->StoredKey);
+		result[found] = (*KeyListTraverser)->StoredKey;
+		//char *c = result[found];
+		//printf("%s\n", c);
+		found++;
+		k--;
+		*KeyListTraverser = (*KeyListTraverser)->Next;
+	}
+	/* remaining k keys may on continues pages*/
+	PAGENO totalPage = FindNumPagesInTree();
+	while (k > 0) {
+		PAGENO nextPage = PagePtr->PgNumOfNxtLfPg;
+		/* check validity of "Page" */
+		if ((nextPage < 1) || (nextPage > totalPage)) {
+			break;
 		}
-		/* remaining k keys may on continues pages*/
-		PAGENO totalPage = FindNumPagesInTree();
-		while (k > 0) {
-			PAGENO nextPage = PagePtr->PgNumOfNxtLfPg;
-			/* check validity of "Page" */
-			if ((nextPage < 1) || (nextPage > totalPage)) {
-				break;
-			}
-			FreePage(PagePtr);
-			PagePtr = FetchPage(nextPage);
-			if (PagePtr) {
-				KeyListTraverser = &(PagePtr->KeyListPtr);
-				while ((*KeyListTraverser) && k > 0) {
-					result[found] = (*KeyListTraverser)->StoredKey;
-					found++;
-					k--;
-					*KeyListTraverser = (*KeyListTraverser)->Next;
-				}
+		FreePage(PagePtr);
+		PagePtr = FetchPage(nextPage);
+		if (PagePtr) {
+			KeyListTraverser = &(PagePtr->KeyListPtr);
+			while ((*KeyListTraverser) && k > 0) {
+				result[found] = (*KeyListTraverser)->StoredKey;
+				found++;
+				k--;
+				*KeyListTraverser = (*KeyListTraverser)->Next;
 			}
 		}
+	}
 	//}
 	printSuccessors(result, found);
 
@@ -78,7 +77,7 @@ int get_successors(char *key, int k, char *result[]) {
 }
 
 void printSuccessors(char **result, int size) {
-	printf("found %d predecessors:\n", size);
+	printf("found %d successors:\n", size);
 	int i;
 	for (i = 0; i < size; i++) {
 		printf("%s\n", result[i]);

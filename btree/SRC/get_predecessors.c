@@ -19,7 +19,7 @@ stack s;
 int get_predecessors(char *key, int k, char *result[]) {
 	//int found = 0;
 	if (k <= 0) {
-		printf("k should be positive not %d\n", k);
+		printf("k should be positive not %d", k);
 		return -1;
 	}
 
