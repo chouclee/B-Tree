@@ -21,22 +21,22 @@ int stack_isEmpty(const stack *s) {
 		return TRUE;
 	else return FALSE;
 }
-void stack_push(stack *s, const void *elemAddr) {
-	void *destAddr;
+void stack_push(stack *s, const void *src) {
+	void *dest;
 	if(s->N == s->capacity){
 		s->capacity *= 2;
 		s->data = realloc(s->data, s->capacity * s->elemSize);
 		assert(s->data != NULL);
 	}
-	destAddr = (char *)s->data + s->N * s->elemSize;
-	memcpy(destAddr, elemAddr, s->elemSize);
+	dest = (char *)s->data + s->N * s->elemSize;
+	memcpy(dest, src, s->elemSize);
 	s->N++;
 }
-void stack_pop(stack *s, void *elemAddr) {
-	const void *sourceAddr;
+void stack_pop(stack *s, void *dst) {
+	const void *src;
 	assert(stack_isEmpty(s) == FALSE);
 	s->N--;
-	sourceAddr = (const char *)s->data + s->N * s->elemSize;
-	memcpy(elemAddr, sourceAddr, s->elemSize);
+	src = (const char *)s->data + s->N * s->elemSize;
+	memcpy(dst, src, s->elemSize);
 }
 
