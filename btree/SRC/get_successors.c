@@ -6,6 +6,7 @@ extern int strtolow(char *s);
 extern PAGENO treesearch_page(PAGENO, char* key);
 extern int FreePage(struct PageHdr *PagePtr);
 extern struct PageHdr *FetchPage(PAGENO Page);
+extern int CompareKeys(char *Key, char *Word);
 void printSuccessors(char** result, int size);
 void findInsertionP(struct KeyRecord **KeyListTraverser, char *Key,
                           int *Found, NUMKEYS NumKeys);
@@ -39,6 +40,16 @@ int get_successors(char *key, int k, char *result[]) {
 											  PagePtr->NumKeys);
 	if (hasFound)
 		*KeyListTraverser = (*KeyListTraverser)->Next;
+	else {
+		int Result;
+		char *Word; /* Key stored in B-Tree */
+		/* Compare the possible new key with key stored in B-Tree */
+		Word = (*KeyListTraverser)->StoredKey;
+		(*(Word + (*KeyListTraverser)->KeyLen)) = '\0';
+		Result = CompareKeys(key, Word);
+		if (Result == 2)
+			*KeyListTraverser = (*KeyListTraverser)->Next;
+	}
 	while ((*KeyListTraverser) && k > 0) {
 		//printf("%s\n", KeyListTraverser->StoredKey);
 		result[found] = (*KeyListTraverser)->StoredKey;

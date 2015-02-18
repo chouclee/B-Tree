@@ -103,9 +103,7 @@ void printPredessors(char **result, int size, int startIdx) {
 }
 
 /**
- * Make a copy of the string to be stored (assumes
- * strdup() or similar functionality is not
- * available
+ * Make a copy of the string to be stored
  */
 char *copyString(char *str)
 {
